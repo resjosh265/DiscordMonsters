@@ -56,6 +56,7 @@ namespace DiscordMonsters
                     break;
                 case "!profile":
                     await _game.GetProfileString(message);
+                    break;
                 case "!list":
                     await _game.GetMonsterList(message);
                     break;
