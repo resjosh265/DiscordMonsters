@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Discord;
 
 namespace DiscordMonsters
 {
@@ -101,6 +102,16 @@ namespace DiscordMonsters
             await message.Channel.SendMessageAsync($"Active monster is {ActiveMonster.Name}!");
         }
 
+        public async Task GetProfileString(SocketMessage message) {
+          var sb = new StringBuilder();
+            sb.Append("```" +
+                      "User - " + player.DiscordId + "\n" +
+                      "Level - " + player.Level + "\n" +
+                      "Exp - " + player.Experience + "\n" +
+                      "```");  
+
+            await message.Author.SendMessageAsync(sb.ToString());          
+        }
         public async Task GetMonsterList(SocketMessage message)
         {
             var player = await _monsterRepository.GetPlayer(message.Author.ToString());
@@ -149,5 +160,7 @@ namespace DiscordMonsters
 
             return true;
         }
+
+
     }
 }
