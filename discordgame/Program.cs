@@ -60,6 +60,9 @@ namespace DiscordMonsters
                 case "!list":
                     await _game.GetMonsterList(message);
                     break;
+                case "!list:public":
+                    await _game.GetMonsterList(message);
+                    break;
                 case "!help":
                     var response = await BuildHelpString();
                     await message.Author.SendMessageAsync(response);
