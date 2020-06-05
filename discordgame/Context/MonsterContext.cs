@@ -6,10 +6,12 @@ namespace DiscordMonsters.Context
     public partial class MonsterContext : DbContext
     {
         private readonly string _connectionString;
+        private readonly string _schemaName;
         public MonsterContext(string connectionString)
         {
             //_connectionString = "server=localhost;port=3306;user=devuser;password=Nothing123;database=esports";
             _connectionString = connectionString;
+            _schemaName = Settings.GetDatabaseSchemaName();
         }
 
         public MonsterContext(DbContextOptions<MonsterContext> options)
@@ -36,32 +38,32 @@ namespace DiscordMonsters.Context
         {
             modelBuilder.Entity<Player>(entity =>
             {
-                entity.ToTable("player", "discord_monsters");
+                entity.ToTable("player", _schemaName);
             });
 
             modelBuilder.Entity<Item>(entity =>
             {
-                entity.ToTable("item", "discord_monsters");
+                entity.ToTable("item", _schemaName);
             });
 
             modelBuilder.Entity<PlayerInventory>(entity =>
             {
-                entity.ToTable("player_inventory", "discord_monsters");
+                entity.ToTable("player_inventory", _schemaName);
             });
 
             modelBuilder.Entity<Monster>(entity =>
             {
-                entity.ToTable("monster", "discord_monsters");
+                entity.ToTable("monster", _schemaName);
             });
 
             modelBuilder.Entity<LevelExperience>(entity =>
             {
-                entity.ToTable("level_experience", "discord_monsters");
+                entity.ToTable("level_experience", _schemaName);
             });
 
             modelBuilder.Entity<PlayerCatch>(entity =>
             {
-                entity.ToTable("player_catch", "discord_monsters");
+                entity.ToTable("player_catch", _schemaName);
             });
         }
     }

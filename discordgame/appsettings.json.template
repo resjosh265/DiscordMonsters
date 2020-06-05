@@ -4,7 +4,10 @@
   },
   "Discord": {
     "UserToken": "USERTOKEN",
-    "ChannelId": 000000000
+    "ChannelId": "000000000"
+  },
+  "Database": {
+    "Schema": "discord_monsters"
   },
   "MonsterActiveTime": 60, //in minutes
   "MinMonsterAppearTime": 30, //in minutes
