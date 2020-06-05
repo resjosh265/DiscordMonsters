@@ -74,9 +74,9 @@ namespace DiscordMonsters
             sb.Append("```" +
                 "!active - Get the active monster in play\n" +
                 "!catch - Attempt to catch the active monster\n" +
-                "!profile - Display the player profile in a DM" +
+                "!list - Display your Discord monsters\n" +
+                "!profile - Display the player profile in a DM\n" +
                 "!help - Display this menu" +
-                "!list - Display your Discord monsters" + 
                 "```");
 
             return sb.ToString();

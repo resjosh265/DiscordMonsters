@@ -132,7 +132,10 @@ namespace DiscordMonsters
                 discordMonsterList += $"{item.monster.Name} (Level: {item.playerCatch.Level})\n";
             }
 
-            await message.Channel.SendMessageAsync(discordMonsterList);
+            if (message.Content.ToLower().Contains(":public"))
+                await message.Channel.SendMessageAsync(discordMonsterList);
+            else
+                await message.Author.SendMessageAsync(discordMonsterList);
         }
 
         private bool GetCatchSuccess(Player player)
