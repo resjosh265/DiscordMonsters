@@ -1,6 +1,8 @@
 ﻿using DiscordMonsters.Context;
 using DiscordMonsters.Context.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,13 +21,13 @@ namespace DiscordMonsters.Repository
 
         public async Task<Monster> GetRandomMonster()
         {
-            var monsterList = await _monsterContext.Monster.ToListAsync();
+            var monsterList = await _monsterContext.Monster.AsAsyncEnumerable().ToListAsync();
             return monsterList.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
         }
 
         public async Task<Player> GetPlayer(string discordId)
         {
-            return await _monsterContext.Player.FirstOrDefaultAsync(x => x.DiscordId == discordId);
+            return await _monsterContext.Player.AsAsyncEnumerable().FirstOrDefaultAsync(x => x.DiscordId == discordId);
         }
 
         public async Task<Player> CreatePlayer(string discordId)
@@ -64,6 +66,21 @@ namespace DiscordMonsters.Repository
 
             _monsterContext.PlayerCatch.Add(playerCatch);
             await _monsterContext.SaveChangesAsync();
+        }
+
+        public async Task<List<PlayerMonster>> GetList(Player player){
+            var playerCatches = await _monsterContext.PlayerCatch.AsAsyncEnumerable().Where(x => x.PlayerId == player.PlayerId).ToListAsync();
+            var playerMonsters = new List<PlayerMonster>();
+            
+            foreach(var playerCatch in playerCatches){
+                PlayerMonster pm = new PlayerMonster();
+                pm.playerCatch = playerCatch;
+                pm.monster = await _monsterContext.Monster.AsAsyncEnumerable().FirstOrDefaultAsync(x => x.MonsterId == playerCatch.MonsterId);
+
+                playerMonsters.Add(pm);
+            }
+
+            return playerMonsters.OrderBy(x => x.monster.Name).ThenBy(x => x.playerCatch.Level).ToList();
         }
     }
 }

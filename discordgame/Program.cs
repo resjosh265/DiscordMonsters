@@ -56,6 +56,8 @@ namespace DiscordMonsters
                     break;
                 case "!profile":
                     await _game.GetProfileString(message);
+                case "!list":
+                    await _game.GetMonsterList(message);
                     break;
                 case "!help":
                     var response = await BuildHelpString();
@@ -73,6 +75,7 @@ namespace DiscordMonsters
                 "!catch - Attempt to catch the active monster\n" +
                 "!profile - Display the player profile in a DM" +
                 "!help - Display this menu" +
+                "!list - Display your Discord monsters" + 
                 "```");
 
             return sb.ToString();
