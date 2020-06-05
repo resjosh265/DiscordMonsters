@@ -69,16 +69,18 @@ namespace DiscordMonsters.Repository
         }
 
         public async Task<List<PlayerMonster>> GetList(Player player){
-            var playerCatches = await _monsterContext.PlayerCatch.AsAsyncEnumerable().Join(_monsterContext.Monster, x => x.MonsterId, y => y.MonsterId, (x, y) => new {x, y}).Where(a => a.x.PlayerId == player.PlayerId).ToListAsync();
+            var playerCatches = await _monsterContext.PlayerCatch.AsAsyncEnumerable().Where(x => x.PlayerId == player.PlayerId).ToListAsync();
             var playerMonsters = new List<PlayerMonster>();
             
             foreach(var playerCatch in playerCatches){
                 PlayerMonster pm = new PlayerMonster();
-                pm.playerCatch = playerCatch.x;
-                pm.monster = playerCatch.y;
+                pm.playerCatch = playerCatch;
+                pm.monster = await _monsterContext.Monster.AsAsyncEnumerable().FirstOrDefaultAsync(x => x.MonsterId == playerCatch.MonsterId);
+
+                playerMonsters.Add(pm);
             }
 
-            return playerMonsters;
+            return playerMonsters.OrderBy(x => x.monster.Name).ThenBy(x => x.playerCatch.Level).ToList();
         }
     }
 }

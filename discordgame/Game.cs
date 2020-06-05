@@ -109,13 +109,13 @@ namespace DiscordMonsters
             var list = await _monsterRepository.GetList(player);
             if (!list.Any())
             {
-                await message.Channel.SendMessageAsync($"You do not currently have any Discord monsters");
+                await message.Channel.SendMessageAsync($"{message.Author.ToString()} does not currently have any Discord monsters");
                 return;
             }
             
-            var discordMonsterList = "List of your Monsters";
+            var discordMonsterList = $"List of Monsters for {message.Author.ToString()}\n";
             foreach(var item in list){
-                discordMonsterList += $"{item.monster.Name} (Level: {item.playerCatch.Level})";
+                discordMonsterList += $"{item.monster.Name} (Level: {item.playerCatch.Level})\n";
             }
 
             await message.Channel.SendMessageAsync(discordMonsterList);
