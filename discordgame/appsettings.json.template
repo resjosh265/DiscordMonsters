@@ -1,0 +1,14 @@
+﻿{
+  "ConnectionStrings": {
+    "Database": "server=localhost;port=3306;user=devuser;password=password" //mysql
+  },
+  "Discord": {
+    "UserToken": "USERTOKEN",
+    "ChannelId": 000000000
+  },
+  "MonsterActiveTime": 60, //in minutes
+  "MinMonsterAppearTime": 30, //in minutes
+  "MonsterAppearModifer": 4, //min times this amount is max monster appear time
+  "CatchImageUrl": "", //url to image, blank if no image
+  "EnableSuccessChance": false
+}
