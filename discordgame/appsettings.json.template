@@ -1,13 +1,13 @@
 ﻿{
   "ConnectionStrings": {
-    "Database": "server=localhost;port=3306;user=devuser;password=password" //mysql
+    "Database": "server=localhost;port=3306;user=devuser;password=Centura123" //mysql
   },
   "Discord": {
-    "UserToken": "USERTOKEN",
-    "ChannelId": "000000000"
+    "UserToken": "NzE4NTYyOTU1MDI0OTI0NzQz.Xtqsgw.9GtTtjfY7Fkj2IW2Qgo9iI03P50",
+    "ChannelId": "718556394835542020"
   },
   "Database": {
-    "Schema": "discord_monsters"
+    "Schema": "discord_monsters_qa"
   },
   "MonsterActiveTime": 60, //in minutes
   "MinMonsterAppearTime": 30, //in minutes

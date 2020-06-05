@@ -54,6 +54,9 @@ namespace DiscordMonsters
                 case "!active":
                     await _game.GetActiveMonster(message);
                     break;
+                case "!list":
+                    await _game.GetMonsterList(message);
+                    break;
                 case "!help":
                     var response = await BuildHelpString();
                     await message.Author.SendMessageAsync(response);
@@ -69,6 +72,7 @@ namespace DiscordMonsters
                 "!active - Get the active monster in play\n" +
                 "!catch - Attempt to catch the active monster\n" +
                 "!help - Display this menu" +
+                "!list - Display your Discord monsters" + 
                 "```");
 
             return sb.ToString();

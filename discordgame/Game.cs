@@ -4,6 +4,7 @@ using DiscordMonsters.Context.Models;
 using DiscordMonsters.Repository;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -98,6 +99,26 @@ namespace DiscordMonsters
             }
 
             await message.Channel.SendMessageAsync($"Active monster is {ActiveMonster.Name}!");
+        }
+
+        public async Task GetMonsterList(SocketMessage message)
+        {
+            var player = await _monsterRepository.GetPlayer(message.Author.ToString());
+            if (player == null) player = await _monsterRepository.CreatePlayer(message.Author.ToString());
+
+            var list = await _monsterRepository.GetList(player);
+            if (!list.Any())
+            {
+                await message.Channel.SendMessageAsync($"{message.Author.ToString()} does not currently have any Discord monsters");
+                return;
+            }
+            
+            var discordMonsterList = $"List of Monsters for {message.Author.ToString()}\n";
+            foreach(var item in list){
+                discordMonsterList += $"{item.monster.Name} (Level: {item.playerCatch.Level})\n";
+            }
+
+            await message.Channel.SendMessageAsync(discordMonsterList);
         }
 
         private bool GetCatchSuccess(Player player)
