@@ -61,7 +61,6 @@ namespace DiscordMonsters
                     var response = await BuildHelpString();
                     await message.Author.SendMessageAsync(response);
                     break;
-                
             }
         }
 

@@ -113,6 +113,7 @@ namespace DiscordMonsters
                       "Exp - " + player.Experience + "\n" +
                       "```");
 
+
             await message.Author.SendMessageAsync(sb.ToString());
         }
 
