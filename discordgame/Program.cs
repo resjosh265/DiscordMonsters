@@ -54,13 +54,14 @@ namespace DiscordMonsters
                 case "!active":
                     await _game.GetActiveMonster(message);
                     break;
+                case "!profile":
+                    await _game.GetProfileString(message);
+                    break;
                 case "!help":
                     var response = await BuildHelpString();
                     await message.Author.SendMessageAsync(response);
                     break;
-                case "!profile":
-                    //do stuff
-                    break;
+                
             }
         }
 
@@ -71,6 +72,7 @@ namespace DiscordMonsters
             sb.Append("```" +
                 "!active - Get the active monster in play\n" +
                 "!catch - Attempt to catch the active monster\n" +
+                "!profile - Display the player profile in a DM" +
                 "!help - Display this menu" +
                 "```");
 
