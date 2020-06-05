@@ -102,5 +102,16 @@ namespace DiscordMonsters
 
             return configuration.GetValue<bool>("EnableSuccessChance");
         }
+
+        public static string GetDatabaseSchemaName()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            configuration = builder.Build();
+
+            return configuration.GetValue<string>("Database:Schema");
+        }
     }
 }
