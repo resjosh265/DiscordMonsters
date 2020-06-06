@@ -67,6 +67,16 @@ namespace DiscordMonsters
                     var response = await BuildHelpString();
                     await message.Author.SendMessageAsync(response);
                     break;
+                case "!admin:clear_messages":
+                    await _game.ClearMessages(message);
+                    break;
+                case "!admin:monster_timer":
+                    await _game.GetMonsterAppearTimer(message);
+                    break;
+                case "!admin:help":
+                    var adminResponse = await BuildAdminHelpString(message);
+                    await message.Author.SendMessageAsync(adminResponse);
+                    break;
             }
         }
 
@@ -81,6 +91,21 @@ namespace DiscordMonsters
                 "!list:public - Display your Discord monsters in game chat\n" +
                 "!profile - Display the player profile in a DM\n" +
                 "!help - Display this menu" +
+                "```");
+
+            return sb.ToString();
+        }
+
+        private async Task<string> BuildAdminHelpString(SocketMessage message)
+        {
+            var IsAdmin = _game.CheckIfAdmin(message);
+
+            var sb = new StringBuilder();
+
+            sb.Append("```" +
+                "!admin:clear_messages - Clears all messages\n" +
+                "!admin:monster_timer - Get the time in minutes until the next monster spawns\n" +
+                "!admin:help - Display this menu" +
                 "```");
 
             return sb.ToString();

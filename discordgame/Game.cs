@@ -4,6 +4,7 @@ using DiscordMonsters.Context.Models;
 using DiscordMonsters.Repository;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -115,6 +116,7 @@ namespace DiscordMonsters
 
             await message.Author.SendMessageAsync(sb.ToString());          
         }
+
         public async Task GetMonsterList(SocketMessage message)
         {
             var player = await _monsterRepository.GetPlayer(message.Author.ToString());
@@ -158,7 +160,7 @@ namespace DiscordMonsters
 
             var channel = client.GetChannel(Settings.GetDiscordChannelId()) as SocketTextChannel;
 
-            await channel.SendMessageAsync($"{ActiveMonster.Name} has dissappeared!");
+            await channel.SendMessageAsync($"{ActiveMonster.Name} has ran away!");
 
             Console.WriteLine($"Despawned monster {ActiveMonster.Name} due to inactivity");
 
@@ -167,6 +169,37 @@ namespace DiscordMonsters
             return true;
         }
 
+        public async Task GetMonsterAppearTimer(SocketMessage message)
+        {
+            var player = await _monsterRepository.GetPlayer(message.Author.ToString());
+            if (player == null) player = await _monsterRepository.CreatePlayer(message.Author.ToString());
 
+            if (player.IsAdmin)
+                await message.Channel.SendMessageAsync($"The next Discord monster will appear in {MonsterAppearTimer} minutes.");
+        }
+
+        public async Task ClearMessages(SocketMessage message)
+        {
+            var player = await _monsterRepository.GetPlayer(message.Author.ToString());
+            if (player == null) player = await _monsterRepository.CreatePlayer(message.Author.ToString());
+
+            if (player.IsAdmin)
+            {
+                var messages = await message.Channel.GetMessagesAsync(1000).FlattenAsync();
+                await ((ITextChannel)message.Channel).DeleteMessagesAsync(messages);
+                const int delay = 3000;
+                await Task.Delay(delay);
+                await message.DeleteAsync();
+                await message.Channel.SendMessageAsync($"Admin {message.Author.ToString()} has cleared the chat.");
+            }
+        }
+
+        public async Task<bool> CheckIfAdmin(SocketMessage message)
+        {
+            var player = await _monsterRepository.GetPlayer(message.Author.ToString());
+            if (player == null) player = await _monsterRepository.CreatePlayer(message.Author.ToString());
+            
+            return player.IsAdmin;
+        }
     }
 }
