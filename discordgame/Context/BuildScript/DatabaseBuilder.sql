@@ -7,6 +7,7 @@ CREATE TABLE `discord_monsters`.`player` (
 `DiscordId` VARCHAR(128) NOT NULL,
 `Level` INT NOT NULL DEFAULT 1,
 `Experience` INT NOT NULL DEFAULT 0,
+`IsAdmin` BIT NOT NULL DEFAULT 0,
 PRIMARY KEY (`PlayerId`),
 UNIQUE INDEX `PlayerId_UNIQUE` (`PlayerId` ASC) VISIBLE,
 UNIQUE INDEX `DiscordId_UNIQUE` (`DiscordId` ASC) VISIBLE);
