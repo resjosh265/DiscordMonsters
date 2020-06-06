@@ -35,7 +35,8 @@ namespace DiscordMonsters.Repository
             var player = new Player
             {
                 DiscordId = discordId,
-                Level = 1
+                Level = 1,
+                IsAdmin = false
             };
 
             _monsterContext.Add(player);

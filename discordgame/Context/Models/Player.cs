@@ -9,5 +9,6 @@ namespace DiscordMonsters.Context.Models
         public string DiscordId { get; set; }
         public int Level { get; set; }
         public int Experience { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }
