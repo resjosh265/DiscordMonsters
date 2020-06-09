@@ -78,6 +78,11 @@ namespace DiscordMonsters
                     await message.Author.SendMessageAsync(adminResponse);
                     break;
             }
+
+            if (message.Content.ToLower().Contains("!admin:say"))
+            {
+                await _game.SayMessage(message, _client);
+            }
         }
 
         private async Task<string> BuildHelpString()
@@ -105,6 +110,7 @@ namespace DiscordMonsters
             sb.Append("```" +
                 "!admin:clear_messages - Clears all messages\n" +
                 "!admin:monster_timer - Get the time in minutes until the next monster spawns\n" +
+                "!admin:say - Say something from the bot\n" +
                 "!admin:help - Display this menu" +
                 "```");
 

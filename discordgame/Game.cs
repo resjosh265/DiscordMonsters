@@ -178,6 +178,19 @@ namespace DiscordMonsters
                 await message.Channel.SendMessageAsync($"The next Discord monster will appear in {MonsterAppearTimer} minutes.");
         }
 
+        public async Task SayMessage(SocketMessage message, DiscordSocketClient client)
+        {
+            var player = await _monsterRepository.GetPlayer(message.Author.ToString());
+            if (player == null) player = await _monsterRepository.CreatePlayer(message.Author.ToString());
+
+            if (player.IsAdmin)
+            {
+                var whatToSay = message.Content.Remove(0, 10);
+                var channel = client.GetChannel(Settings.GetDiscordChannelId()) as SocketTextChannel;
+                await channel.SendMessageAsync(whatToSay);
+            }
+        }
+
         public async Task ClearMessages(SocketMessage message)
         {
             var player = await _monsterRepository.GetPlayer(message.Author.ToString());
