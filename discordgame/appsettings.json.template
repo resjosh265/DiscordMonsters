@@ -9,6 +9,10 @@
   "Database": {
     "Schema": "discord_monsters_qa"
   },
+  "WebInterface": {
+    "Enabled":  false,
+    "Url": "http://localhost/"
+  },
   "MonsterActiveTime": 60, //in minutes
   "MinMonsterAppearTime": 30, //in minutes
   "MonsterAppearModifer": 4, //min times this amount is max monster appear time

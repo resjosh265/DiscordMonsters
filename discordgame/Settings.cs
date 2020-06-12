@@ -113,5 +113,27 @@ namespace DiscordMonsters
 
             return configuration.GetValue<string>("Database:Schema");
         }
+
+        public static bool WebInterfaceEnabled()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            configuration = builder.Build();
+
+            return configuration.GetValue<bool>("WebInterface:Enabled");
+        }
+
+        public static string GetWebInterfaceUrl()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            configuration = builder.Build();
+
+            return configuration.GetValue<string>("WebInterface:Url");
+        }
     }
 }

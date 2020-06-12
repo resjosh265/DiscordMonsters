@@ -67,6 +67,12 @@ namespace DiscordMonsters
                     var response = await BuildHelpString();
                     await message.Author.SendMessageAsync(response);
                     break;
+                case "!web":
+                    if (!Settings.WebInterfaceEnabled()) break;
+                    var senderId = message.Author.ToString();
+                    senderId = senderId.Replace("#", "%23");
+                    await message.Channel.SendMessageAsync($"{Settings.GetWebInterfaceUrl()}?discordId={senderId}");
+                    break;
                 case "!admin:clear_messages":
                     await _game.ClearMessages(message);
                     break;
@@ -95,6 +101,7 @@ namespace DiscordMonsters
                 "!list - Display your Discord monsters in a DM\n" +
                 "!list:public - Display your Discord monsters in game chat\n" +
                 "!profile - Display the player profile in a DM\n" +
+                "!web - Display your public profile web interface\n" +
                 "!help - Display this menu" +
                 "```");
 
