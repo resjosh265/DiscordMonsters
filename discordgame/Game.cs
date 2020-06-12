@@ -138,8 +138,8 @@ namespace DiscordMonsters
             if (discordMonsterList.Length > 2000)
             {
                 if (Settings.WebInterfaceEnabled()) return;
-                var senderId = message.Author.ToString();
-                discordMonsterList = $"Monster list is to large, view at the link here \n {Settings.GetWebInterfaceUrl()}?discordId={senderId}";
+                var url = GetPlayerWebUrl(message.Author.ToString());
+                discordMonsterList = $"Monster list is to large, view at the link here \n {url}";
             }
 
             if (message.Content.ToLower().Contains(":public"))
@@ -225,6 +225,14 @@ namespace DiscordMonsters
             if (player == null) player = await monsterRepository.CreatePlayer(message.Author.ToString());
             
             return player.IsAdmin;
+        }
+
+        public string GetPlayerWebUrl(string discordId)
+        {
+            discordId = discordId.Replace("#", "%23");
+            discordId = discordId.Replace(" ", "%20");
+
+            return $"{Settings.GetWebInterfaceUrl()}?discordId={discordId}";
         }
     }
 }

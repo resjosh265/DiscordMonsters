@@ -69,9 +69,8 @@ namespace DiscordMonsters
                     break;
                 case "!web":
                     if (!Settings.WebInterfaceEnabled()) break;
-                    var senderId = message.Author.ToString();
-                    senderId = senderId.Replace("#", "%23");
-                    await message.Channel.SendMessageAsync($"{Settings.GetWebInterfaceUrl()}?discordId={senderId}");
+                    var url = _game.GetPlayerWebUrl(message.Author.ToString());
+                    await message.Channel.SendMessageAsync(url);
                     break;
                 case "!admin:clear_messages":
                     await _game.ClearMessages(message);
