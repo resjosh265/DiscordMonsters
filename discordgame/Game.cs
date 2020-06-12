@@ -1,7 +1,4 @@
 ﻿using Discord.WebSocket;
-using DiscordMonsters.Context;
-using DiscordMonsters.Context.Models;
-using DiscordMonsters.Repository;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Data.Repository;
+using Data.Context.Models;
 
 namespace DiscordMonsters
 {
@@ -24,7 +23,7 @@ namespace DiscordMonsters
 
         public Game()
         {
-            if (_monsterRepository == null) _monsterRepository = new MonsterRepository();
+            if (_monsterRepository == null) _monsterRepository = new MonsterRepository(Settings.GetConnectionString("database"), Settings.GetDatabaseSchemaName());
 
             _channelId = Settings.GetDiscordChannelId();
         }
@@ -132,6 +131,15 @@ namespace DiscordMonsters
             var discordMonsterList = $"List of Monsters for {message.Author.ToString()}\n";
             foreach(var item in list){
                 discordMonsterList += $"{item.monster.Name} (Level: {item.playerCatch.Level})\n";
+            }
+
+            var sendString = new List<string>();
+
+            if (discordMonsterList.Length > 2000)
+            {
+                if (Settings.WebInterfaceEnabled()) return;
+                var senderId = message.Author.ToString();
+                discordMonsterList = $"Monster list is to large, view at the link here \n {Settings.GetWebInterfaceUrl()}?discordId={senderId}";
             }
 
             if (message.Content.ToLower().Contains(":public"))
