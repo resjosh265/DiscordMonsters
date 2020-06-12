@@ -13,7 +13,6 @@ namespace DiscordMonsters
 {
     public class Game
     {
-        private MonsterRepository _monsterRepository;
         private ulong _channelId;
 
         public Monster ActiveMonster;
@@ -23,8 +22,6 @@ namespace DiscordMonsters
 
         public Game()
         {
-            if (_monsterRepository == null) _monsterRepository = new MonsterRepository(Settings.GetConnectionString("database"), Settings.GetDatabaseSchemaName());
-
             _channelId = Settings.GetDiscordChannelId();
         }
 
@@ -43,6 +40,7 @@ namespace DiscordMonsters
                 return;
             }
 
+            var monsterRepository = new MonsterRepository(Settings.GetConnectionString("database"), Settings.GetDatabaseSchemaName());
             var channel = client.GetChannel(Settings.GetDiscordChannelId()) as SocketTextChannel;
 
             if (channel == null) return;
@@ -51,7 +49,7 @@ namespace DiscordMonsters
             var maxAppearTime = Settings.GetMaxMonsterAppearTime();
             var rnd = new Random();
 
-            ActiveMonster = await _monsterRepository.GetRandomMonster();
+            ActiveMonster = await monsterRepository.GetRandomMonster();
             ActiveMonster.GenerateLevel();
             MonsterAppearTimer = rnd.Next(minAppearTime, maxAppearTime);
             ActiveMonsterTimer = Settings.GetMonsterActiveMaxTime();
@@ -68,10 +66,10 @@ namespace DiscordMonsters
                 await message.Channel.SendMessageAsync($"No active monster to catch. Try later.");
                 return;
             }
+            var monsterRepository = new MonsterRepository(Settings.GetConnectionString("database"), Settings.GetDatabaseSchemaName());
+            var player = await monsterRepository.GetPlayer(message.Author.ToString());
 
-            var player = await _monsterRepository.GetPlayer(message.Author.ToString());
-
-            if (player == null) player = await _monsterRepository.CreatePlayer(message.Author.ToString());
+            if (player == null) player = await monsterRepository.CreatePlayer(message.Author.ToString());
 
             var catchSuccess = GetCatchSuccess(player);
 
@@ -80,8 +78,8 @@ namespace DiscordMonsters
                 var catchImageUrl = Settings.GetCatchImageUrl();
 
                 await message.Channel.SendMessageAsync($"{catchImageUrl} \n {player.DiscordId} caught the {ActiveMonster.Name}!");
-                await _monsterRepository.IncreasePlayerExperience(player, ActiveMonster.BaseExperienceAward * ActiveMonster.Level);
-                await _monsterRepository.AddPlayerCatch(player, ActiveMonster);
+                await monsterRepository.IncreasePlayerExperience(player, ActiveMonster.BaseExperienceAward * ActiveMonster.Level);
+                await monsterRepository.AddPlayerCatch(player, ActiveMonster);
                 Console.WriteLine($"New monster will spawn in {MonsterAppearTimer} minutes");
                 ActiveMonster = null;
             }
@@ -103,8 +101,9 @@ namespace DiscordMonsters
         }
 
         public async Task GetProfileString(SocketMessage message) {
-            var player = await _monsterRepository.GetPlayer(message.Author.ToString());
-            if (player == null) player = await _monsterRepository.CreatePlayer(message.Author.ToString());
+            var monsterRepository = new MonsterRepository(Settings.GetConnectionString("database"), Settings.GetDatabaseSchemaName());
+            var player = await monsterRepository.GetPlayer(message.Author.ToString());
+            if (player == null) player = await monsterRepository.CreatePlayer(message.Author.ToString());
 
             var sb = new StringBuilder();
             sb.Append("```" +
@@ -118,10 +117,11 @@ namespace DiscordMonsters
 
         public async Task GetMonsterList(SocketMessage message)
         {
-            var player = await _monsterRepository.GetPlayer(message.Author.ToString());
-            if (player == null) player = await _monsterRepository.CreatePlayer(message.Author.ToString());
+            var monsterRepository = new MonsterRepository(Settings.GetConnectionString("database"), Settings.GetDatabaseSchemaName());
+            var player = await monsterRepository.GetPlayer(message.Author.ToString());
+            if (player == null) player = await monsterRepository.CreatePlayer(message.Author.ToString());
 
-            var list = await _monsterRepository.GetList(player);
+            var list = await monsterRepository.GetList(player);
             if (!list.Any())
             {
                 await message.Channel.SendMessageAsync($"{message.Author.ToString()} does not currently have any Discord monsters");
@@ -179,8 +179,9 @@ namespace DiscordMonsters
 
         public async Task GetMonsterAppearTimer(SocketMessage message)
         {
-            var player = await _monsterRepository.GetPlayer(message.Author.ToString());
-            if (player == null) player = await _monsterRepository.CreatePlayer(message.Author.ToString());
+            var monsterRepository = new MonsterRepository(Settings.GetConnectionString("database"), Settings.GetDatabaseSchemaName());
+            var player = await monsterRepository.GetPlayer(message.Author.ToString());
+            if (player == null) player = await monsterRepository.CreatePlayer(message.Author.ToString());
 
             if (player.IsAdmin)
                 await message.Channel.SendMessageAsync($"The next Discord monster will appear in {MonsterAppearTimer} minutes.");
@@ -188,8 +189,9 @@ namespace DiscordMonsters
 
         public async Task SayMessage(SocketMessage message, DiscordSocketClient client)
         {
-            var player = await _monsterRepository.GetPlayer(message.Author.ToString());
-            if (player == null) player = await _monsterRepository.CreatePlayer(message.Author.ToString());
+            var monsterRepository = new MonsterRepository(Settings.GetConnectionString("database"), Settings.GetDatabaseSchemaName());
+            var player = await monsterRepository.GetPlayer(message.Author.ToString());
+            if (player == null) player = await monsterRepository.CreatePlayer(message.Author.ToString());
 
             if (player.IsAdmin)
             {
@@ -201,8 +203,9 @@ namespace DiscordMonsters
 
         public async Task ClearMessages(SocketMessage message)
         {
-            var player = await _monsterRepository.GetPlayer(message.Author.ToString());
-            if (player == null) player = await _monsterRepository.CreatePlayer(message.Author.ToString());
+            var monsterRepository = new MonsterRepository(Settings.GetConnectionString("database"), Settings.GetDatabaseSchemaName());
+            var player = await monsterRepository.GetPlayer(message.Author.ToString());
+            if (player == null) player = await monsterRepository.CreatePlayer(message.Author.ToString());
 
             if (player.IsAdmin)
             {
@@ -217,8 +220,9 @@ namespace DiscordMonsters
 
         public async Task<bool> CheckIfAdmin(SocketMessage message)
         {
-            var player = await _monsterRepository.GetPlayer(message.Author.ToString());
-            if (player == null) player = await _monsterRepository.CreatePlayer(message.Author.ToString());
+            var monsterRepository = new MonsterRepository(Settings.GetConnectionString("database"), Settings.GetDatabaseSchemaName());
+            var player = await monsterRepository.GetPlayer(message.Author.ToString());
+            if (player == null) player = await monsterRepository.CreatePlayer(message.Author.ToString());
             
             return player.IsAdmin;
         }
